@@ -6,7 +6,6 @@
 #include "math.h"
 #include <time.h>
 #include <stdio.h>
-#include "sqlite3.h"
 #include <sys/shm.h>
 #include <sys/stat.h>
 
@@ -69,7 +68,8 @@ int *get_shared_memory() {
   return shmaddr;
 }
 
-int* sharedMemAddr;
+int x = 1;
+int* sharedMemAddr = &x;
 
 void main(void){
 	char * p = &some_var;
@@ -88,11 +88,14 @@ void main(void){
   //sharedMemAddr = get_shared_memory();
 
 
-	while(*sharedMemAddr != 1){/*printf("attacker waiting...\n");*/}
+	while(*sharedMemAddr != 1){
+
+		//printf("%d\n",*sharedMemAddr);
+		/*printf("attacker waiting...\n");*/}
 	//*sharedMemAddr = 0; //get back
 
 	//printf("1\n");
-	for (int i = 0; i < 10000; ++i)
+	for (int i = 0; i < 100000; ++i)
 	{
 	//while(*sharedMemAddr != 2){
 
@@ -118,6 +121,9 @@ void main(void){
 		//clflush(&sqlite3_open); //get back
 		//while(*sharedMemAddr != 1) {}
 		//rdtsc(&time2);
+
+		clflush(sharedMemAddr);
+		
 		time2 = gettime();
 
 		//printf("%d\n", (time2 - time1)>2000?2000:(time2 - time1));
@@ -125,14 +131,14 @@ void main(void){
 		//i++;
 		//printf("2\n");
 	}
-	*sharedMemAddr = 0;
+	//*sharedMemAddr = 0;
 
 	//printf("address is: %p\n", sqlite3_open);
 
-	for (int j = 0; j < i; ++j)
+	for (int j = 0; j < 100000; ++j)
 	{	
 		//printf("%d\n",res_time[j]>2000?2000:res_time[j]); //get back
-		printf("%d\n",res_time[j]);
+		printf("%d   ",res_time[j]);
 		/* code */
 	}
 	//Output the ciphertext and the corresponding times to .txt file
