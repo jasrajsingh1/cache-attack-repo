@@ -36,40 +36,8 @@ inline void flush(volatile void * adrs) {
 
 inline unsigned long gettime() __attribute__((always_inline));
 
-int addition_function(int a, int b){
-	int i = 0;
-	int j = 0;
-	int c = 0;
-	for (int i = 0; i < 100; ++i)
-	{
-		j += i;
-	}
-	c = a + b; 
-	return c;
-}
 
 static char some_var = 0;
-
-
-int *get_shared_memory() {
-  key_t shm_key = 6166523;
-  const int shm_size = 1024;
-
-  int shm_id;
-  int* shmaddr, *ptr;
-  int* shared_memory[3];
-  int *p;
-
-  /* Allocate a shared memory segment. */
-  shm_id = shmget (shm_key, shm_size, IPC_CREAT | S_IRUSR | S_IWUSR);
-
-  /* Attach the shared memory segment. */
-  shmaddr = (int*) shmat (shm_id, 0, 0);
-  return shmaddr;
-}
-
-int x = 1;
-int* sharedMemAddr = &x;
 
 void main(void){
 	char * p = &some_var;
@@ -77,68 +45,34 @@ void main(void){
 	int j;	
 	int tot_time = 0;	
 
-	int a = 1;
-	int b = 2;
-	int c = 0;
-
 	int i = 0;	
+	
+	int x,y;
 
 	int res_time[100000] = {0};
 
-  //sharedMemAddr = get_shared_memory();
-
-
-	while(*sharedMemAddr != 1){
-
-		//printf("%d\n",*sharedMemAddr);
-		/*printf("attacker waiting...\n");*/}
-	//*sharedMemAddr = 0; //get back
-
-	//printf("1\n");
-	for (int i = 0; i < 100000; ++i)
+	for (int i = 0; i < 10000; ++i)
 	{
-	//while(*sharedMemAddr != 2){
-
-		//printf("f+f attack\n");
-
-		//Flush the first cache line T-table
-		
-		//clflush(&sqlite3_open);
-
-		//clflush(&sqlite3_open + 4299);
-
-		//some_var += 1;
-		//c = addition_function(a,b);
-		//Measure the timing for the reload of the first cache line with rdtsc function. 
+		clflush(&x);
+		//y=x;
+ 
 		time1 = gettime();
 		
-		//*sharedMemAddr = 0;
-		//rdtsc(&time1);
-		//value=*p;
-		//c = addition_function(a,b);
-		//clflush((void *)0x7ffff7b475e2);
-
-		//clflush(&sqlite3_open); //get back
-		//while(*sharedMemAddr != 1) {}
-		//rdtsc(&time2);
-
-		clflush(sharedMemAddr);
-		
+		y=x;
 		time2 = gettime();
 
-		//printf("%d\n", (time2 - time1)>2000?2000:(time2 - time1));
+		printf("%d\n", (time2 - time1)>2000?2000:(time2 - time1));
 		res_time[i] = time2 - time1;//(time2 - time1)>2000?2000:(time2 - time1);
-		//i++;
+		i++;
 		//printf("2\n");
 	}
-	//*sharedMemAddr = 0;
 
 	//printf("address is: %p\n", sqlite3_open);
 
-	for (int j = 0; j < 100000; ++j)
+	for (int j = 0; j < i; ++j)
 	{	
 		//printf("%d\n",res_time[j]>2000?2000:res_time[j]); //get back
-		printf("%d   ",res_time[j]);
+		printf("%d\n",res_time[j]);
 		/* code */
 	}
 	//Output the ciphertext and the corresponding times to .txt file
